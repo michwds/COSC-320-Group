@@ -1,9 +1,9 @@
 
 def loop(tweets, keywords):
     newText = ""			                #initialise the “sublist”
-    for tweet in tweets			            #iterates each tweet in tweets list 
+    for tweet in tweets:			            #iterates each tweet in tweets list 
         words = tweet.text.split()	        #delimits full text into a list of words
-        for idx, word in enumerate(words) 		#iterates each word in the list
+        for idx, word in enumerate(words): 		#iterates each word in the list
             for key in keywords:	           #iterates each keyword in the abbreviation list
                 if word.txt == key.name: 	#checks to see if the word is a keyword
                     word.txt = key.txt 	    #replaces abbreviation with full text
