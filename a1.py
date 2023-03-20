@@ -36,7 +36,8 @@ def loop(tweets, keywords):                 #tweets is a list of tweet objects, 
             if idx > 0:		                #add a space between words for the “sublist”
                 newText += " "
             newText += word	                #construct the replacement text “sublist”
-    tweet.content = newText			        #replace tweet text with processed string
+        tweet.content = newText			        #replace tweet text with processed string
+        newText=""
     return tweets 				            #after repeating for all tweets, return output
 
 processed_tweets = loop(tweets, keywords)
