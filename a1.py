@@ -1,3 +1,29 @@
+import csv
+
+class Keyword:
+    def __init__(self, name, txt):
+        self.name = name
+        self.txt = txt
+
+class Tweet:
+    def __init__(self, content):
+        self.content = content
+
+
+keywords = []
+with open('keywords_data.csv', mode='r') as csv_file:
+    csv_reader = csv.reader(csv_file)
+    next(csv_reader)  # Skip header row
+    for row in csv_reader:
+        keywords.append(Keyword(row[0], row[1]))
+
+
+tweets = []
+with open('tweets.csv', mode='r') as csv_file:
+    csv_reader = csv.DictReader(csv_file)
+    for row in csv_reader:
+        tweets.append(Tweet(row['content']))
+
 
 def loop(tweets, keywords):                 #tweets is a list of tweet objects, keywords is a list of key objects each with key-value pair
     newText = ""			                #initialise the “sublist”
@@ -12,3 +38,9 @@ def loop(tweets, keywords):                 #tweets is a list of tweet objects, 
             newText += word	                #construct the replacement text “sublist”
     tweet.content = newText			        #replace tweet text with processed string
     return tweets 				            #after repeating for all tweets, return output
+
+processed_tweets = loop(tweets, keywords)
+
+# Print the processed tweets
+for tweet in processed_tweets:
+    print(tweet.content)
