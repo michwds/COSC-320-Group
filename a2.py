@@ -1,10 +1,5 @@
 import csv
 
-class Keyword:
-    def __init__(self, name, txt):
-        self.name = name
-        self.txt = txt
-
 class Tweet:
     def __init__(self, content):
         self.content = content
@@ -32,5 +27,8 @@ def loop(tweets, keywords):      #takes a list of tweet objects and keywords dic
 processed_tweets = loop(tweets, keywords)
 
 # Print the processed tweets
+n=1
 for tweet in processed_tweets:
+    print(n)
+    n=n+1
     print(tweet.content)
