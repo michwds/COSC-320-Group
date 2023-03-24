@@ -18,6 +18,7 @@ with open('keywords_data.csv', mode='r') as csv_file:
         keywords.append(Keyword(row[0], row[1]))
 
 
+
 tweets = []
 with open('tweets.csv', mode='r') as csv_file:
     csv_reader = csv.DictReader(csv_file)
