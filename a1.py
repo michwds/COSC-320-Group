@@ -1,4 +1,9 @@
 import csv
+import time
+from random import choice
+
+import matplotlib.pyplot as plt
+
 
 class Keyword:
     def __init__(self, name, txt):
@@ -16,9 +21,9 @@ def main():
         next(csv_reader)  # Skip header row
         for row in csv_reader:
             keywords.append(Keyword(row[0], row[1]))
-            
+
     tweets = []
-    with open('tweets.csv', mode='r') as csv_file:
+    with open('tweets.csv', mode='r',encoding='utf-8') as csv_file:
         csv_reader = csv.DictReader(csv_file)
         for row in csv_reader:
             tweets.append(Tweet(row['content']))
@@ -28,9 +33,27 @@ def main():
     for tweet in tweets:
         processed_tweets.append(loop(tweet, keywords))
 
+
+
     # Print the processed tweets
     for tweet in processed_tweets:
         print(tweet.content)
+
+    #print plot
+    x, y = plot_runningTime(loop, tweets, keywords)
+    print(x, y)
+    plt.plot(x, y, color="red", label="Naive version")
+    plt.xlabel("n tweets")
+    plt.ylabel("Time(ms)")
+    plt.legend()
+    plt.show()
+
+
+def getNtweets(tweets, number):        #gets a specified number of tweets as list
+    nTweets = []
+    for n in range(number):
+        nTweets.append(tweets[n])
+    return nTweets
 
 def loop(tweet, keywords):                 #tweets is a list of tweet objects, keywords is a list of key objects each with key-value pair
     newText = ""			                #initialise the “sublist”
@@ -45,6 +68,29 @@ def loop(tweet, keywords):                 #tweets is a list of tweet objects, k
     tweet.content = newText			        #replace tweet text with processed string
     newText=""
     return tweet 				            #after repeating for all tweets, return output
+
+
+#input tweets in a dataset,
+#we increment the try tweet sentence numbers, and get time took to process for each different size set.
+#we plot x value as the increasing number of tweets 1 to 170 (our whole dataset), and y value as time taken to process
+
+def plot_runningTime(myfunction, tweets, keywords):
+    x_values = []
+    y_values=[]
+
+    for x in range(10, len(tweets), 10):  #we want x tweets from tweets in our dataset: startN, endN, stepSize
+        runtime = 0
+        for nTry in range(20):                            #this is for taking average time to took for refine the time data
+            for tw in getNtweets(tweets,x):
+                start_time = time.time()
+                myfunction(tw, keywords)                  #time for processing 1 tweet
+                end_time = time.time()
+                runtime  += (end_time - start_time)
+        runtime = runtime/20                     #averaging the time to refine the time data
+        x_values.append(x)                       #input size aka tweet number
+        y_values.append(runtime)     #time taken to process
+    return x_values,y_values
+
 
 if __name__ =='__main__':
     main()
