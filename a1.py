@@ -9,22 +9,28 @@ class Tweet:
     def __init__(self, content):
         self.content = content
 
+def main():
+    keywords = []
+    with open('keywords_data.csv', mode='r') as csv_file:
+        csv_reader = csv.reader(csv_file)
+        next(csv_reader)  # Skip header row
+        for row in csv_reader:
+            keywords.append(Keyword(row[0], row[1]))
+            
+    tweets = []
+    with open('tweets.csv', mode='r') as csv_file:
+        csv_reader = csv.DictReader(csv_file)
+        for row in csv_reader:
+            tweets.append(Tweet(row['content']))
 
-keywords = []
-with open('keywords_data.csv', mode='r') as csv_file:
-    csv_reader = csv.reader(csv_file)
-    next(csv_reader)  # Skip header row
-    for row in csv_reader:
-        keywords.append(Keyword(row[0], row[1]))
 
+    processed_tweets = []
+    for tweet in tweets:
+        processed_tweets.append(loop(tweet, keywords))
 
-
-tweets = []
-with open('tweets.csv', mode='r') as csv_file:
-    csv_reader = csv.DictReader(csv_file)
-    for row in csv_reader:
-        tweets.append(Tweet(row['content']))
-
+    # Print the processed tweets
+    for tweet in processed_tweets:
+        print(tweet.content)
 
 def loop(tweet, keywords):                 #tweets is a list of tweet objects, keywords is a list of key objects each with key-value pair
     newText = ""			                #initialise the “sublist”
@@ -40,10 +46,5 @@ def loop(tweet, keywords):                 #tweets is a list of tweet objects, k
     newText=""
     return tweet 				            #after repeating for all tweets, return output
 
-processed_tweets = []
-for tweet in tweets:
-    processed_tweets.append(loop(tweet, keywords))
-
-# Print the processed tweets
-for tweet in processed_tweets:
-    print(tweet.content)
+if __name__ =='__main__':
+    main()
