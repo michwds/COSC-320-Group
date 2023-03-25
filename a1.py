@@ -46,6 +46,7 @@ def main():
     plt.xlabel("n tweets")
     plt.ylabel("Time(ms)")
     plt.legend()
+    plt.axline((0, 0), (170, 0.025), linewidth=1, color='b')
     plt.show()
 
 
@@ -80,13 +81,13 @@ def plot_runningTime(myfunction, tweets, keywords):
 
     for x in range(10, len(tweets), 10):  #we want x tweets from tweets in our dataset: startN, endN, stepSize
         runtime = 0
-        for nTry in range(20):                            #this is for taking average time to took for refine the time data
-            for tw in getNtweets(tweets,x):
+        #for nTry in range(20):                            #this is for taking average time to took for refine the time data
+        for tw in getNtweets(tweets,x):
                 start_time = time.time()
                 myfunction(tw, keywords)                  #time for processing 1 tweet
                 end_time = time.time()
                 runtime  += (end_time - start_time)
-        runtime = runtime/20                     #averaging the time to refine the time data
+        #runtime = runtime/20                     #averaging the time to refine the time data
         x_values.append(x)                       #input size aka tweet number
         y_values.append(runtime)     #time taken to process
     return x_values,y_values
