@@ -35,9 +35,9 @@ def main():
 
 
 
-    # Print the processed tweets
-    for tweet in processed_tweets:
-        print(tweet.content)
+    #Print the processed tweets
+    #for tweet in processed_tweets:
+    #    print(tweet.content)
 
     #print plot
     x, y = plot_runningTime(loop, tweets, keywords)
