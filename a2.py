@@ -1,4 +1,5 @@
 import csv
+import glob
 
 class Tweet:
     def __init__(self, content):
@@ -23,15 +24,16 @@ def main():
         for row in csv_reader:
             keywords2[row[0]] = row[1]
 
+    #Path to the folder containing the tweets
+    tweets_folder_path = ''
+    #Get all the files in the folder
+    files = glob.glob(tweets_folder_path + '*.csv')
     tweets = []
-    with open('tweets.csv', mode='r') as csv_file:
-        csv_reader = csv.DictReader(csv_file)
-        for row in csv_reader:
-            tweets.append(Tweet(row['content']))
-    
-    processed_tweets1 = process(a1, tweets, keywords1)
-
-    processed_tweets2 = process(a2, tweets, keywords2)
+    for file in files:
+        with open(file, mode='r', encoding='utf-8') as csv_file:
+            csv_reader = csv.DictReader(csv_file)
+            for row in csv_reader:
+                tweets.append(Tweet(row['content']))
 
 def a2(tweet, keywords):      #takes a list of tweet objects and keywords dictionary as inputs
     newText = " ".join(keywords.get(word, word) for word in tweet.content.split())      #search and replace using hashmap             
