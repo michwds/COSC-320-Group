@@ -1,5 +1,6 @@
 import csv
 import time
+import glob
 from random import choice
 
 import matplotlib.pyplot as plt
@@ -22,22 +23,25 @@ def main():
         for row in csv_reader:
             keywords.append(Keyword(row[0], row[1]))
 
+    #Path to the folder containing the tweets
+    tweets_folder_path = ''
+    #Get all the files in the folder
+    tweet_files = glob.glob(tweets_folder_path + '*.csv')
     tweets = []
-    with open('tweets.csv', mode='r',encoding='utf-8') as csv_file:
-        csv_reader = csv.DictReader(csv_file)
-        for row in csv_reader:
-            tweets.append(Tweet(row['content']))
-
-
+    for file in tweet_files:
+        with open(file, mode='r', encoding='utf-8') as csv_file:
+            csv_reader = csv.DictReader(csv_file)
+            for row in csv_reader:
+                tweets.append(Tweet(row['content']))
     processed_tweets = []
     for tweet in tweets:
         processed_tweets.append(loop(tweet, keywords))
 
 
 
-    #Print the processed tweets
-    #for tweet in processed_tweets:
-    #    print(tweet.content)
+    # Print the processed tweets
+    for tweet in processed_tweets:
+        print(tweet.content)
 
     #print plot
     x, y = plot_runningTime(loop, tweets, keywords)
