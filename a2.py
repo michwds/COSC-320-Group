@@ -57,9 +57,10 @@ def process(loop, tweets, keywords):
         loop(tweet, keywords)
     return tweets
 
-# Print the processed tweets
-n=1
-for tweet in processed_tweets:
-    print(n)
-    n=n+1
-    print(tweet.content)
+def print(processed_tweets):        # Print the processed tweets
+    for i, tweet in enumerate(processed_tweets):
+        print(i)
+        print(tweet.content)
+
+if __name__ =='__main__':
+    main()
