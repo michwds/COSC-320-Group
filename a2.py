@@ -28,7 +28,7 @@ def main():
             keywords2[row[0]] = row[1]
 
     #Path to the folder containing the tweets
-    tweets_folder_path = "COSC320_Project_Dataset/"
+    tweets_folder_path = "D:\Documents\320gp\COSC-320-Group\COSC320_Project_Dataset/"
     #Get all the files in the folder
     files = glob.glob(tweets_folder_path + '*.csv')
     tweets = []
@@ -43,7 +43,7 @@ def main():
           print("Null Input Error")
           continue
 
-    plot_runtime(a1, a2, tweets, keywords1, keywords2, 5)
+    plot_runtime(a1, a2, tweets, keywords1, keywords2, 1) #IMPORTANT - the final input is sampling time in seconds. Set to higher values if your PC is slower. Plots will be less accurate as a result.
 
 def a2(tweet, keywords):      #takes a list of tweet objects and keywords dictionary as inputs
     newText = " ".join(keywords.get(word, word) for word in tweet.content.split())      #search and replace using hashmap             
@@ -64,11 +64,6 @@ def a1(tweet, keywords):                 #tweets is a list of tweet objects, key
     newText=""
     return tweet 				            #after repeating for all tweets, return output
 
-def process(loop, tweets, keywords):
-    for tweet in tweets:
-        loop(tweet, keywords)
-    return tweets
-
 def printT(processed_tweets):        # Print the processed tweets
     for i, tweet in enumerate(processed_tweets):
         print(i)
@@ -76,7 +71,7 @@ def printT(processed_tweets):        # Print the processed tweets
 
 def plot_runtime(myfunction1, myfunction2, tweets, keywords1, keywords2, threshold):
 
-    print("plot function execution started...")
+    print("Plot function execution started...")
     x_values1 = []
     y_values1 = []
     x_values2 = []
@@ -88,7 +83,7 @@ def plot_runtime(myfunction1, myfunction2, tweets, keywords1, keywords2, thresho
     runtime1 = 0
     runtime2 = 0
 
-    print("Running naive algorithm...")
+    print("Executing first algorithm...")
 
     for tw in tweets:
 
@@ -115,7 +110,7 @@ def plot_runtime(myfunction1, myfunction2, tweets, keywords1, keywords2, thresho
             x_values1.append(numOfTw1)
             counttime1 = 0        #since counttime is just for threshold checking, we need to initialize after we successfully store the data. Then another round starts.
     
-    print("Algorithm 1 completed, running algorithm 2...")
+    print("Algorithm 1 completed, executing algorithm 2...")
 
     for tw in tweets:
         start_time2 = time.time()
@@ -152,6 +147,8 @@ def plot_runtime(myfunction1, myfunction2, tweets, keywords1, keywords2, thresho
     plt.xlabel("Number of Tweets Processed (millions)")
     plt.legend()
     plt.show()
+
+    print("Complete!")
 
 if __name__ =='__main__':
     main()
