@@ -43,9 +43,9 @@ def main():
           continue
 
 
-    print(len(keywords2))
+   
     plot_runtime(a1, a2, tweets, keywords1, keywords2, 5)
-    #printT(process(a2, tweets, keywords2))
+   
 
 
 
