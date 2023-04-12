@@ -11,6 +11,7 @@ class Keyword:
     def __init__(self, name, txt):
         self.name = name
         self.txt = txt
+
 def main():
     keywords1 = []
     with open('keywords_data.csv', mode='r') as csv_file:
@@ -39,16 +40,10 @@ def main():
        for row in csv_reader:
           tweets.append(Tweet(row['content']))
       except:
-          print("error detected")
+          print("Null Input Error")
           continue
 
-
-   
     plot_runtime(a1, a2, tweets, keywords1, keywords2, 5)
-   
-
-
-
 
 def a2(tweet, keywords):      #takes a list of tweet objects and keywords dictionary as inputs
     newText = " ".join(keywords.get(word, word) for word in tweet.content.split())      #search and replace using hashmap             
@@ -93,6 +88,8 @@ def plot_runtime(myfunction1, myfunction2, tweets, keywords1, keywords2, thresho
     runtime1 = 0
     runtime2 = 0
 
+    print("Running naive algorithm...")
+
     for tw in tweets:
 
         #"function execution" block
@@ -101,36 +98,44 @@ def plot_runtime(myfunction1, myfunction2, tweets, keywords1, keywords2, thresho
         myfunction1(tw, keywords1)  # time for processing 1 tweet
         end_time1 = time.time()
 
-        start_time2 = time.time()
-        myfunction2(tw, keywords2)  # time for processing 1 tweet
-        end_time2 = time.time()
-
         #"count tweet number processed and runtime" block
         numOfTw1 += 1
-        numOfTw2 += 1
         counttime1 += (end_time1 - start_time1) #this is used for checking time threshhold (accumulated time of function run)
-        counttime2 += (end_time2 - start_time2)
 
         #"intial data" block
         if counttime1 <= threshold and runtime1 == 0:
             y_values1.append(counttime1)
             x_values1.append(numOfTw1)
-        if counttime2 <= threshold and runtime2 == 0:
-            y_values2.append(counttime2)
-            x_values2.append(numOfTw2)
 
         #"check thresholding" block
-        if(counttime2 > threshold):
-            runtime2 += counttime2
-            y_values2.append(runtime2)
-            x_values2.append(numOfTw2)
-            counttime2 = 0
 
         if(counttime1 > threshold):
             runtime1 += counttime1 #runtime is stored in accumulated manner. ex) 5sec, 10sec, ....
             y_values1.append(runtime1)
             x_values1.append(numOfTw1)
             counttime1 = 0        #since counttime is just for threshold checking, we need to initialize after we successfully store the data. Then another round starts.
+    
+    print("Algorithm 1 completed, running algorithm 2...")
+
+    for tw in tweets:
+        start_time2 = time.time()
+        myfunction2(tw, keywords2)  # time for processing 1 tweet
+        end_time2 = time.time()
+
+        numOfTw2 += 1
+        counttime2 += (end_time2 - start_time2)
+
+        if counttime2 <= threshold and runtime2 == 0:
+            y_values2.append(counttime2)
+            x_values2.append(numOfTw2)
+
+        if(counttime2 > threshold):
+            runtime2 += counttime2
+            y_values2.append(runtime2)
+            x_values2.append(numOfTw2)
+            counttime2 = 0
+
+    print("Plotting...")    
 
     #"the last discarded data" block
     if(runtime1 > 0):
