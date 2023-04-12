@@ -24,7 +24,7 @@ def main():
             keywords.append(Keyword(row[0], row[1]))
 
     #Path to the folder containing the tweets
-    tweets_folder_path = ''
+    tweets_folder_path = 'COSC320_Project_Dataset/'
     #Get all the files in the folder
     tweet_files = glob.glob(tweets_folder_path + '*.csv')
     tweets = []

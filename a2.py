@@ -1,5 +1,7 @@
 import csv
 import glob
+import time
+import matplotlib.pyplot as plt
 
 class Tweet:
     def __init__(self, content):
@@ -25,15 +27,28 @@ def main():
             keywords2[row[0]] = row[1]
 
     #Path to the folder containing the tweets
-    tweets_folder_path = ''
+    tweets_folder_path = "COSC320_Project_Dataset/"
     #Get all the files in the folder
     files = glob.glob(tweets_folder_path + '*.csv')
     tweets = []
+
     for file in files:
-        with open(file, mode='r', encoding='utf-8') as csv_file:
-            csv_reader = csv.DictReader(csv_file)
-            for row in csv_reader:
-                tweets.append(Tweet(row['content']))
+     with open(file, mode='r', encoding='utf-8') as csv_file:
+      csv_reader = csv.DictReader(csv_file)
+      try:
+       for row in csv_reader:
+          tweets.append(Tweet(row['content']))
+      except:
+          print("error detected")
+          continue
+
+
+    print(len(keywords2))
+    plot_runtime(a1, a2, tweets, keywords1, keywords2, 5)
+    #printT(process(a2, tweets, keywords2))
+
+
+
 
 def a2(tweet, keywords):      #takes a list of tweet objects and keywords dictionary as inputs
     newText = " ".join(keywords.get(word, word) for word in tweet.content.split())      #search and replace using hashmap             
@@ -59,10 +74,71 @@ def process(loop, tweets, keywords):
         loop(tweet, keywords)
     return tweets
 
-def print(processed_tweets):        # Print the processed tweets
+def printT(processed_tweets):        # Print the processed tweets
     for i, tweet in enumerate(processed_tweets):
         print(i)
         print(tweet.content)
+
+def plot_runtime(myfunction1, myfunction2, tweets, keywords1, keywords2, threshold):
+
+    print("plot function execution started...")
+    x_values1 = []
+    y_values1 = []
+    x_values2 = []
+    y_values2 = []
+    numOfTw1 =0
+    numOfTw2 =0
+    counttime1 = 0
+    counttime2 = 0
+    runtime1 = 0
+    runtime2 = 0
+
+    for tw in tweets:
+
+        #"function execution" block
+
+        start_time1 = time.time()
+        myfunction1(tw, keywords1)  # time for processing 1 tweet
+        end_time1 = time.time()
+
+        start_time2 = time.time()
+        myfunction2(tw, keywords2)  # time for processing 1 tweet
+        end_time2 = time.time()
+
+        #"count tweet number processed and runtime" block
+        numOfTw1 += 1
+        numOfTw2 += 1
+        counttime1 += (end_time1 - start_time1) #this is used for checking time threshhold (accumulated time of function run)
+        counttime2 += (end_time2 - start_time2)
+
+        if(counttime2 > threshold):
+            runtime2 += counttime2
+            x_values2.append(runtime2)
+            y_values2.append(numOfTw2)
+            counttime2 = 0
+
+        #"check thresholding" block
+        if(counttime1 > threshold):
+            runtime1 += counttime1 #runtime is stored in accumulated manner. ex) 5sec, 10sec, ....
+            x_values1.append(runtime1)
+            y_values1.append(numOfTw1)
+            counttime1 = 0        #since counttime is just for threshold checking, we need to initialize after we successfully store the data. Then another round starts.
+
+    if(runtime1 > 0):
+        x_values1.append(runtime1)
+        y_values1.append(numOfTw1)
+    if(runtime2 > 0):
+        x_values2.append(runtime2)
+        y_values2.append(numOfTw2)
+
+
+    #"plot" block
+    plt.plot(x_values1, y_values1, color="red", label="Naive version")
+    plt.plot(x_values2, y_values2, color="b", label = "Improved version")
+    plt.xlabel("Processed Time")
+    plt.ylabel("Number of Tweets Processed")
+    plt.legend()
+    plt.show()
 
 if __name__ =='__main__':
     main()
