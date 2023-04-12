@@ -40,8 +40,10 @@ def main():
        for row in csv_reader:
           tweets.append(Tweet(row['content']))
       except:
-          print("Null Input Error")
+          print("Null Input Error, input line skipped")
           continue
+
+        # WARNING - the naive algorithm can take several minutes to complete.
 
     plot_runtime(a1, a2, tweets, keywords1, keywords2, 1) #IMPORTANT - the final input is sampling time in seconds. Set to higher values if your PC is slower. Plots will be less accurate as a result.
 
