@@ -140,7 +140,6 @@ def plot_runtime(myfunction1, myfunction2, tweets, keywords1, keywords2, thresho
         y_values2.append(runtime2)
         x_values2.append(numOfTw2)
 
-    print(numOfTw2)
     #"plot" block
     plt.plot(x_values1, y_values1, color="red", label="Naive version")
     plt.plot(x_values2, y_values2, color="b", label = "Improved version")
