@@ -111,32 +111,41 @@ def plot_runtime(myfunction1, myfunction2, tweets, keywords1, keywords2, thresho
         counttime1 += (end_time1 - start_time1) #this is used for checking time threshhold (accumulated time of function run)
         counttime2 += (end_time2 - start_time2)
 
-        if(counttime2 > threshold):
-            runtime2 += counttime2
-            x_values2.append(runtime2)
-            y_values2.append(numOfTw2)
-            counttime2 = 0
+        #"intial data" block
+        if counttime1 <= threshold and runtime1 == 0:
+            y_values1.append(counttime1)
+            x_values1.append(numOfTw1)
+        if counttime2 <= threshold and runtime2 == 0:
+            y_values2.append(counttime2)
+            x_values2.append(numOfTw2)
 
         #"check thresholding" block
+        if(counttime2 > threshold):
+            runtime2 += counttime2
+            y_values2.append(runtime2)
+            x_values2.append(numOfTw2)
+            counttime2 = 0
+
         if(counttime1 > threshold):
             runtime1 += counttime1 #runtime is stored in accumulated manner. ex) 5sec, 10sec, ....
-            x_values1.append(runtime1)
-            y_values1.append(numOfTw1)
+            y_values1.append(runtime1)
+            x_values1.append(numOfTw1)
             counttime1 = 0        #since counttime is just for threshold checking, we need to initialize after we successfully store the data. Then another round starts.
 
+    #"the last discarded data" block
     if(runtime1 > 0):
-        x_values1.append(runtime1)
-        y_values1.append(numOfTw1)
+        y_values1.append(runtime1)
+        x_values1.append(numOfTw1)
     if(runtime2 > 0):
-        x_values2.append(runtime2)
-        y_values2.append(numOfTw2)
+        y_values2.append(runtime2)
+        x_values2.append(numOfTw2)
 
-
+    print(numOfTw2)
     #"plot" block
     plt.plot(x_values1, y_values1, color="red", label="Naive version")
     plt.plot(x_values2, y_values2, color="b", label = "Improved version")
-    plt.xlabel("Processed Time")
-    plt.ylabel("Number of Tweets Processed")
+    plt.ylabel("Processed Time (seconds)")
+    plt.xlabel("Number of Tweets Processed (million)")
     plt.legend()
     plt.show()
 
