@@ -28,7 +28,7 @@ def main():
             keywords2[row[0]] = row[1]
 
     #Path to the folder containing the tweets
-    tweets_folder_path = "D:\Documents\320gp\COSC-320-Group\COSC320_Project_Dataset/"
+    tweets_folder_path = "COSC320_Project_Dataset/"
     #Get all the files in the folder
     files = glob.glob(tweets_folder_path + '*.csv')
     tweets = []
@@ -71,6 +71,15 @@ def printT(processed_tweets):        # Print the processed tweets
         print(i)
         print(tweet.content)
 
+#function to save a list of tweets to a csv file
+def save_processed_tweets(processed_tweets, filename):
+    with open(filename, 'w', newline='') as csvfile:
+        fieldnames = ['content']
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        writer.writeheader()
+        for tweet in processed_tweets:
+            writer.writerow({'content': tweet.content})
+
 def plot_runtime(myfunction1, myfunction2, tweets, keywords1, keywords2, threshold):
 
     print("Plot function execution started...")
@@ -86,14 +95,19 @@ def plot_runtime(myfunction1, myfunction2, tweets, keywords1, keywords2, thresho
     runtime2 = 0
 
     print("Executing first algorithm...")
-
+    processeed_tweet_a1 = []
     for tw in tweets:
 
         #"function execution" block
 
         start_time1 = time.time()
-        myfunction1(tw, keywords1)  # time for processing 1 tweet
+        processed_tweet = myfunction1(tw, keywords1)  # time for processing 1 tweet
         end_time1 = time.time()
+        
+        processeed_tweet_a1.append(processed_tweet)  #add processed tweet to list
+
+        
+
 
         #"count tweet number processed and runtime" block
         numOfTw1 += 1
@@ -111,13 +125,17 @@ def plot_runtime(myfunction1, myfunction2, tweets, keywords1, keywords2, thresho
             y_values1.append(runtime1)
             x_values1.append(numOfTw1)
             counttime1 = 0        #since counttime is just for threshold checking, we need to initialize after we successfully store the data. Then another round starts.
-    
-    print("Algorithm 1 completed, executing algorithm 2...")
+    #Save the processed tweets to a csv file
+    save_processed_tweets(processeed_tweet_a1, 'processed_tweets_a1.csv')
 
+    print("Algorithm 1 completed, executing algorithm 2...")
+    processeed_tweet_a2 = []
     for tw in tweets:
         start_time2 = time.time()
         myfunction2(tw, keywords2)  # time for processing 1 tweet
         end_time2 = time.time()
+
+        processeed_tweet_a2.append(tw)  #add processed tweet to list
 
         numOfTw2 += 1
         counttime2 += (end_time2 - start_time2)
@@ -131,7 +149,8 @@ def plot_runtime(myfunction1, myfunction2, tweets, keywords1, keywords2, thresho
             y_values2.append(runtime2)
             x_values2.append(numOfTw2)
             counttime2 = 0
-
+    #Save the processed tweets to a csv file
+    save_processed_tweets(processeed_tweet_a2, 'processed_tweets_a2.csv')
     print("Plotting...")    
 
     #"the last discarded data" block
